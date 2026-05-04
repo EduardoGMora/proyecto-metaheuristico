@@ -1,12 +1,13 @@
 import numpy as np
 
-def run_abc(func: callable,
+def run(func: callable,
         dim: int,
         bounds: tuple,
         n_iter: int,
         init: np.ndarray,
         limit: int = 15,
-        seed: int = 0) -> float:
+        seed: int = 0,
+        **kwargs) -> float:
     """
     Artificial Bee Colony (ABC) for n-dimensional minimization.
 
@@ -32,19 +33,18 @@ def run_abc(func: callable,
 
     rng = np.random.default_rng(seed)
     lo, hi = bounds
-    num_fuentes = init.shape[0]
+    num_sources = init.shape[0]
 
     sources = init.copy().astype(float)
     values  = np.array([func(s) for s in sources])
-    trials  = np.zeros(num_fuentes, dtype=int)
+    trials  = np.zeros(num_sources, dtype=int)
 
-    best_idx = np.argmin(values)
-    best_val = values[best_idx]
+    best_val = float(np.min(values))
 
     for _ in range(n_iter):
         # ---------- 1) Employed bees ----------
-        for i in range(num_fuentes):
-            k = rng.integers(0, num_fuentes - 1)
+        for i in range(num_sources):
+            k = rng.integers(0, num_sources - 1)
             if k >= i:
                 k += 1
             phi = rng.uniform(-1.0, 1.0, size=dim)
@@ -63,9 +63,9 @@ def run_abc(func: callable,
 
         # ---------- 2) Onlooker bees ----------
         probs = fitness_to_prob(values)
-        for _ in range(num_fuentes):
-            sel = rng.choice(num_fuentes, p=probs)
-            k = rng.integers(0, num_fuentes - 1)
+        for _ in range(num_sources):
+            sel = rng.choice(num_sources, p=probs)
+            k = rng.integers(0, num_sources - 1)
             if k >= sel:
                 k += 1
             phi = rng.uniform(-1.0, 1.0, size=dim)
@@ -83,7 +83,7 @@ def run_abc(func: callable,
             best_val = values[idx]
 
         # ---------- 3) Scout bees ----------
-        for i in range(num_fuentes):
+        for i in range(num_sources):
             if trials[i] >= limit:
                 sources[i] = rng.uniform(lo, hi, size=dim)
                 values[i] = func(sources[i])
