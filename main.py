@@ -69,13 +69,17 @@ def get_tables():
             print(f"  {key}")
             print(f"{'='*60}")
             df = build_table(dim, init_name, init_fn)
-            tables[key] = df
+            tables[key] = {
+                "dim": dim,
+                "init": init_name,
+                "Table": df
+            }
             print(df.to_string())
     return tables
 
-def store_table(table: pd.DataFrame, name: str):
-    filename = f"results_{name.replace(' ', '_')}.csv"
-    table.to_csv(filename)
+def store_table(table: pd.DataFrame, dim: int, init: str):
+    filename = f"results_dim{dim}_{init.lower().replace(' ', '_')}.xlsx"
+    table.to_excel(filename)
     print(f"\nTabla guardada en {filename}")
 
 def main():
@@ -84,8 +88,8 @@ def main():
     tables = get_tables()
     
     print("\nGuardando tablas...")
-    for key, df in tables.items():
-        store_table(df, key)
+    for value in tables.values():
+        store_table(value["Table"], value["dim"], value["init"])
 
 if __name__ == "__main__":
     main()
