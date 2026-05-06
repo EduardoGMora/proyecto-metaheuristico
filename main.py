@@ -1,52 +1,28 @@
 import pandas as pd
 
-import functions as f
-import algorithms as algos
-from experiments.initializations import uniform, latin_hypercube
-
 from experiments.runner import run_experiment
-
-# ---------------------------------------------------------------------------
-# Configuration
-# ---------------------------------------------------------------------------
-BOUNDS    = (-3, 3)
-POP_SIZE  = 20
-N_ITER    = 80
-N_RUNS    = 30
-
-ALGORITHMS = {
-    "ABC":           algos.abc.run,
-    "ACO":           algos.aco.run,
-    "GA":            algos.ga.run,
-    "FA":            algos.fa.run,
-    "PSO":           algos.pso.run,
-    "Local Search":  algos.local_search.run,
-    "Random Search": algos.random_search.run,
-    "Climbing":      algos.climbing.run,
-    "SA":            algos.sa.run,
-    "HS":            algos.hs.run,
-}
-
-FUNCTIONS = {
-    "Rastrigin": f.rastrigin,
-    "Sphere":    f.sphere,
-    "Rosenbrock": f.rosenbrock,
-    "Ackley":     f.ackley,
-}
-
-INITS = {
-    "Uniform":         uniform,
-    "Latin Hypercube": latin_hypercube,
-}
-
-DIMS = [3, 10]
+from config import BOUNDS, POP_SIZE, N_ITER, N_RUNS, ALGORITHMS, FUNCTIONS, INITS, DIMS
 
 def build_table(dim: int, init_name: str, init_fn: callable) -> pd.DataFrame:
-    rows = []
+    """
+    Build a results table for a given dimension and initialization method.
+
+    Parameters
+    ----------
+    dim : int — dimension of the problem to optimize
+    init_name : str — name of the initialization method (for labeling purposes)
+    init_fn : callable — initialization function that generates initial points
+    
+    Returns
+    -------
+    pd.DataFrame : A DataFrame containing the results for each algorithm and function.
+
+    """
+    rows: list[dict[str, float]] = []
     for algo_name, algo_fn in ALGORITHMS.items():
-        row = {"Algorithm": algo_name}
+        row: dict[str, any] = {"Algorithm": algo_name}
         for fn_name, fn in FUNCTIONS.items():
-            metrics = run_experiment(
+            metrics: dict[str, float] = run_experiment(
                 algo_fn=algo_fn,
                 func=fn,
                 dim=dim,
@@ -62,8 +38,15 @@ def build_table(dim: int, init_name: str, init_fn: callable) -> pd.DataFrame:
         rows.append(row)
     return pd.DataFrame(rows).set_index("Algorithm")
 
-def get_tables():
-    tables = {}
+def get_tables() -> dict:
+    """
+    Generate results tables for all combinations of dimensions and initialization methods.
+    
+    Returns    
+    -------  
+    dict : A dictionary containing the results tables for each configuration.
+    """
+    tables: dict[str, dict[str, any]] = {}
     for dim in DIMS:
         for init_name, init_fn in INITS.items():
             key = f"Dimensiones = {dim} | Inicialización = {init_name}"
@@ -79,15 +62,28 @@ def get_tables():
             print(df.to_string())
     return tables
 
-def store_table(table: pd.DataFrame, dim: int, init: str):
-    filename = f"results_dim{dim}_{init.lower().replace(' ', '_')}.xlsx"
+def store_table(table: pd.DataFrame, dim: int, init: str) -> None:
+    """
+    Store a results table in an Excel file.
+
+    Parameters
+    ----------
+    table : pd.DataFrame — the results table to store
+    dim : int — dimension of the problem
+    init : str — name of the initialization method
+
+    Returns
+    -------
+    None
+    """
+    filename: str = f"results_dim{dim}_{init.lower().replace(' ', '_')}.xlsx"
     table.to_excel(filename)
     print(f"\nTabla guardada en {filename}")
 
 def main():
     print("Iniciando experimentos...")
 
-    tables = get_tables()
+    tables: dict[str, dict[str, any]] = get_tables()
     
     print("\nGuardando tablas...")
     for value in tables.values():

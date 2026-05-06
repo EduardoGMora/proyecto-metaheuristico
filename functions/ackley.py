@@ -2,9 +2,17 @@ import numpy as np
 
 def ackley(x: np.ndarray) -> float:
     """
-    Función Ackley n-dimensional. Mínimo global en x=0 con f=0.
-    Dominio recomendado: [-32.768, 32.768]^n
+    Function Ackley n-dimensional.
+    Global minimum at x=(0,...,0) with f=0.
+    Recommended domain: [-5, 5]^n
+    
+    Parameters
+    ----------
     x : np.ndarray shape (dim,)
+
+    Returns
+    -------
+    float
     """
     n = len(x)
     sum_sq = np.sum(x**2)

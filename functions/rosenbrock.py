@@ -2,10 +2,17 @@ import numpy as np
 
 def rosenbrock(x: np.ndarray) -> float:
     """
-    Función Rosenbrock n-dimensional (función banana de Valley).
-    Mínimo global en x=(1,...,1) con f=0.
-    Dominio recomendado: [-5, 10]^n
+    Function Rosenbrock n-dimensional (banana function).
+    Global minimum at x=(1,...,1) with f=0.
+    Recommended domain: [-5, 10]^n
+
+    Parameters
+    ----------
     x : np.ndarray shape (dim,)
+    
+    Returns
+    -------
+    float
     """
     xi = x[:-1]
     xi1 = x[1:]
