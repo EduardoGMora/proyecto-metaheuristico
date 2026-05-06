@@ -1,6 +1,6 @@
 import pandas as pd
 
-from experiments.runner import run_experiment
+from exp.runner import run_experiment
 from config import BOUNDS, POP_SIZE, N_ITER, N_RUNS, ALGORITHMS, FUNCTIONS, INITS, DIMS
 
 def build_table(dim: int, init_fn: callable) -> pd.DataFrame:

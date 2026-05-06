@@ -11,7 +11,7 @@ from algorithms import (
     sa, 
     hs
 )
-from experiments.initializations import uniform, latin_hypercube
+from exp.initializations import uniform, latin_hypercube
 
 BOUNDS   = (-3, 3)
 POP_SIZE = 20
