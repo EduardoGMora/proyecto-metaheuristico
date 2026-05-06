@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def run_random_search(func: callable,
+def run(func: callable,
         dim: int,
         bounds: tuple,
         n_iter: int,

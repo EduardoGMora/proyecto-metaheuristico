@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def uniform(pop_size: int, dim: int, bounds: tuple, rng: np.random.Generator) -> np.ndarray:
     """
     Uniform random initialization.
