@@ -1,7 +1,6 @@
 import pandas as pd
 
-from functions.rastrigin import rastrigin
-from functions.sphere import sphere
+import functions as f
 
 from algorithms import abc, aco, ga, fa, pso, local_search, random_search
 
@@ -18,17 +17,19 @@ N_RUNS    = 30
 
 ALGORITHMS = {
     "ABC":           abc.run,
-    # "ACO":           aco.run,
-    # "GA":            ga.run,
-    # "FA":            fa.run,
-    # "PSO":           pso.run,
-    # "Local Search":  local_search.run,
-    # "Random Search": random_search.run,
+    "ACO":           aco.run,
+    "GA":            ga.run,
+    "FA":            fa.run,
+    "PSO":           pso.run,
+    "Local Search":  local_search.run,
+    "Random Search": random_search.run,
 }
 
 FUNCTIONS = {
-    "Rastrigin": rastrigin,
-    "Sphere":    sphere,
+    "Rastrigin": f.rastrigin,
+    "Sphere":    f.sphere,
+    "Rosenbrock": f.rosenbrock,
+    "Ackley":     f.ackley,
 }
 
 INITS = {
@@ -38,9 +39,6 @@ INITS = {
 
 DIMS = [3, 10]
 
-# ---------------------------------------------------------------------------
-# Generate tables: 2 dims × 2 initializations = 4 tables
-# ---------------------------------------------------------------------------
 def build_table(dim: int, init_name: str, init_fn: callable) -> pd.DataFrame:
     rows = []
     for algo_name, algo_fn in ALGORITHMS.items():
@@ -62,8 +60,7 @@ def build_table(dim: int, init_name: str, init_fn: callable) -> pd.DataFrame:
         rows.append(row)
     return pd.DataFrame(rows).set_index("Algorithm")
 
-
-def main():
+def get_tables():
     tables = {}
     for dim in DIMS:
         for init_name, init_fn in INITS.items():
@@ -76,6 +73,14 @@ def main():
             print(df.to_string())
     return tables
 
+def main():
+    tables = get_tables()
+    
+    # Guardar tablas en archivos CSV
+    for key, df in tables.items():
+        filename = key.replace(" ", "_").replace("=", "").replace("|", "") + ".csv"
+        df.to_csv(filename)
+        print(f"Tabla guardada en: {filename}")
 
 if __name__ == "__main__":
     main()
