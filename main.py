@@ -73,14 +73,19 @@ def get_tables():
             print(df.to_string())
     return tables
 
+def store_table(table: pd.DataFrame, name: str):
+    filename = f"results_{name.replace(' ', '_')}.csv"
+    table.to_csv(filename)
+    print(f"\nTabla guardada en {filename}")
+
 def main():
+    print("Iniciando experimentos...")
+
     tables = get_tables()
     
-    # Guardar tablas en archivos CSV
+    print("\nGuardando tablas...")
     for key, df in tables.items():
-        filename = key.replace(" ", "_").replace("=", "").replace("|", "") + ".csv"
-        df.to_csv(filename)
-        print(f"Tabla guardada en: {filename}")
+        store_table(df, key)
 
 if __name__ == "__main__":
     main()
