@@ -1,11 +1,10 @@
 import pandas as pd
 
 import functions as f
-
-from algorithms import abc, aco, ga, fa, pso, local_search, random_search
+import algorithms as algos
+from experiments.initializations import uniform, latin_hypercube
 
 from experiments.runner import run_experiment
-from experiments.initializations import uniform, latin_hypercube
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -16,13 +15,16 @@ N_ITER    = 80
 N_RUNS    = 30
 
 ALGORITHMS = {
-    "ABC":           abc.run,
-    "ACO":           aco.run,
-    "GA":            ga.run,
-    "FA":            fa.run,
-    "PSO":           pso.run,
-    "Local Search":  local_search.run,
-    "Random Search": random_search.run,
+    "ABC":           algos.abc.run,
+    "ACO":           algos.aco.run,
+    "GA":            algos.ga.run,
+    "FA":            algos.fa.run,
+    "PSO":           algos.pso.run,
+    "Local Search":  algos.local_search.run,
+    "Random Search": algos.random_search.run,
+    "Climbing":      algos.climbing.run,
+    "SA":            algos.sa.run,
+    "HS":            algos.hs.run,
 }
 
 FUNCTIONS = {
