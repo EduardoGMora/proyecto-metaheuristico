@@ -3,14 +3,13 @@ import pandas as pd
 from experiments.runner import run_experiment
 from config import BOUNDS, POP_SIZE, N_ITER, N_RUNS, ALGORITHMS, FUNCTIONS, INITS, DIMS
 
-def build_table(dim: int, init_name: str, init_fn: callable) -> pd.DataFrame:
+def build_table(dim: int, init_fn: callable) -> pd.DataFrame:
     """
     Build a results table for a given dimension and initialization method.
 
     Parameters
     ----------
     dim : int — dimension of the problem to optimize
-    init_name : str — name of the initialization method (for labeling purposes)
     init_fn : callable — initialization function that generates initial points
     
     Returns
@@ -50,16 +49,13 @@ def get_tables() -> dict:
     for dim in DIMS:
         for init_name, init_fn in INITS.items():
             key = f"Dimensiones = {dim} | Inicialización = {init_name}"
-            print(f"\n{'='*60}")
+            print(f"\n{'-'*50}")
             print(f"  {key}")
-            print(f"{'='*60}")
-            df = build_table(dim, init_name, init_fn)
-            tables[key] = {
-                "dim": dim,
-                "init": init_name,
-                "Table": df
-            }
+            print(f"{'-'*50}")
+            df = build_table(dim, init_fn)
+            tables[key] = df
             print(df.to_string())
+            store_table(df, dim, init_name)
     return tables
 
 def store_table(table: pd.DataFrame, dim: int, init: str) -> None:
@@ -82,12 +78,8 @@ def store_table(table: pd.DataFrame, dim: int, init: str) -> None:
 
 def main():
     print("Iniciando experimentos...")
-
-    tables: dict[str, dict[str, any]] = get_tables()
-    
-    print("\nGuardando tablas...")
-    for value in tables.values():
-        store_table(value["Table"], value["dim"], value["init"])
+    tables = get_tables()
+    print(f"Experimentos completados. {len(tables)} Tablas generadas y almacenadas.")
 
 if __name__ == "__main__":
     main()
