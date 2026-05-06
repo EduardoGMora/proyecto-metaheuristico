@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def run_local_search(func: callable,
+def run(func: callable,
         dim: int,
         bounds: tuple,
         n_iter: int,
